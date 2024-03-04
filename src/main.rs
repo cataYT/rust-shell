@@ -1,6 +1,12 @@
 use std::io::{self, Write};
 mod cmd_funcs;
 
+macro_rules! flush {
+    () => {
+        std::io::stdout().flush().expect("failed to flush buffer");
+    };
+}
+
 fn replace_home_with_tilde(path: &str) -> String {
     if path.starts_with("/home/cata") {
         return format!("~{}", &path["/home/cata".len()..]);
@@ -15,7 +21,7 @@ async fn main() -> Result<(), reqwest::Error> {
     loop {
         let mut input_string: String = String::new(); // Clear input_string at the beginning of each iteration
         print!("{}$: ", replace_home_with_tilde(&cmd_funcs::pwd().unwrap().display().to_string()));
-        std::io::stdout().flush().expect("failed to flush buffer");
+        flush!();
         match io::stdin().read_line(&mut input_string) {
             Ok(_) => {
                 let low_input_str: String = input_string.to_lowercase().trim().to_string();
@@ -25,7 +31,7 @@ async fn main() -> Result<(), reqwest::Error> {
                     "touch" => {
                         let mut file_name: String = String::new();
                         print!("Enter your file name to create: ");
-                        std::io::stdout().flush().expect("failed to flush buffer");
+                        flush!();
                         std::io::stdin().read_line(&mut file_name).unwrap();
                         file_name = file_name.trim().to_string();
                         cmd_funcs::touch(&file_name);
@@ -33,7 +39,7 @@ async fn main() -> Result<(), reqwest::Error> {
                     "rm" => {
                         let mut file_name: String = String::new();
                         print!("Enter your file name to remove: ");
-                        std::io::stdout().flush().expect("failed to flush buffer");
+                        flush!();
                         std::io::stdin().read_line(&mut file_name).unwrap();
                         file_name = file_name.trim().to_string();
                         cmd_funcs::rm(&file_name);
@@ -41,7 +47,7 @@ async fn main() -> Result<(), reqwest::Error> {
                     "mkdir" => {
                         let mut directory_name: String = String::new();
                         print!("Enter your directory name: ");
-                        std::io::stdout().flush().expect("failed to flush buffer");
+                        flush!();
                         std::io::stdin().read_line(&mut directory_name).unwrap();
                         directory_name = directory_name.trim().to_string();
                         cmd_funcs::mkdir(&directory_name);
@@ -49,7 +55,7 @@ async fn main() -> Result<(), reqwest::Error> {
                     "rmdir" => {
                         let mut directory_name: String = String::new();
                         print!("Enter your directory name: ");
-                        std::io::stdout().flush().expect("failed to flush buffer");
+                        flush!();
                         std::io::stdin().read_line(&mut directory_name).unwrap();
                         directory_name = directory_name.trim().to_string();
                         cmd_funcs::rmdir(&directory_name);
@@ -58,13 +64,13 @@ async fn main() -> Result<(), reqwest::Error> {
                     "xor" => {
                         let mut x_string: String = String::new();
                         print!("Enter your string: ");
-                        std::io::stdout().flush().expect("failed to flush buffer");
+                        flush!();
                         std::io::stdin().read_line(&mut x_string).unwrap();
                         x_string = x_string.trim().to_string();
 
                         let mut key: String = String::new();
                         print!("Enter your key: ");
-                        std::io::stdout().flush().expect("failed to flush buffer");
+                        flush!();
                         std::io::stdin().read_line(&mut key).unwrap();
                         key = key.trim().chars().next().unwrap().to_string();
                         let result: String = cmd_funcs::xor(&x_string, key.chars().next().unwrap());
@@ -79,13 +85,28 @@ async fn main() -> Result<(), reqwest::Error> {
                     "curl" => {
                         let mut url: String = String::new();
                         print!("Enter your url: ");
-                        std::io::stdout().flush().expect("failed to flush buffer");
+                        flush!();
                         std::io::stdin().read_line(&mut url).unwrap();
                         url = url.trim().to_string();
                         match cmd_funcs::curl(&url).await {
                             Ok(body) => println!("Response body: {}", body),
                             Err(error) => println!("Error: {}", error),
                         }
+                    }
+                    "calc" => {
+                        let mut num1: String = String::new();
+                        let mut num2: String = String::new();
+                        let mut operation: String = String::new();
+                        print!("Enter number 1: ");
+                        flush!();
+                        std::io::stdin().read_line(&mut num1).unwrap();
+                        print!("Enter number 2: ");
+                        flush!();
+                        std::io::stdin().read_line(&mut num2).unwrap();
+                        print!("Enter operation: ");
+                        flush!();
+                        std::io::stdin().read_line(&mut operation).unwrap();
+                        println!("Result: {}", cmd_funcs::calc(&operation, &num1, &num2).unwrap());
                     }
                     _ => {
                         println!("Unknown command: {}", low_input_str);

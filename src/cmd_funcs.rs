@@ -21,6 +21,7 @@ pub fn help() {
     println!("clear: clears the screen");
     println!("pwd: prints current working directory");
     println!("curl: send get request");
+    println!("calc: does basic arithmetic");
     println!("exit: exit the program");
 }
 
@@ -133,4 +134,25 @@ pub async fn curl(url: &str) -> Result<String, reqwest::Error> {
     let response: reqwest::Response = reqwest::get(url).await?;
     let body = response.text().await?;
     Ok(body)
+}
+
+pub fn calc(operation: &str, num1: &str, num2: &str) -> Result<f64, String> {
+    let num1_parsed = num1.trim().parse::<f64>().map_err(|e| format!("Error converting num1: {}", e))?;
+    let num2_parsed = num2.trim().parse::<f64>().map_err(|e| format!("Error converting num2: {}", e))?;
+
+    let operation_lower = operation.trim().to_lowercase();
+
+    match operation_lower.as_str() {
+        "add" => Ok(num1_parsed + num2_parsed),
+        "sub" => Ok(num1_parsed - num2_parsed),
+        "mul" => Ok(num1_parsed * num2_parsed),
+        "div" => {
+            if num1_parsed == 0.0 || num2_parsed == 0.0 {
+                Err("Division by zero".to_string())
+            } else {
+                Ok(num1_parsed / num2_parsed)
+            }
+        },
+        _ => Err(format!("Invalid operation: {}", operation)),
+    }
 }
