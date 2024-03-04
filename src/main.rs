@@ -34,7 +34,7 @@ async fn main() -> Result<(), reqwest::Error> {
                         flush!();
                         std::io::stdin().read_line(&mut file_name).unwrap();
                         file_name = file_name.trim().to_string();
-                        cmd_funcs::touch(&file_name);
+                        println!("File {} created successfully", cmd_funcs::touch(&file_name).unwrap());
                     }
                     "rm" => {
                         let mut file_name: String = String::new();
@@ -42,7 +42,7 @@ async fn main() -> Result<(), reqwest::Error> {
                         flush!();
                         std::io::stdin().read_line(&mut file_name).unwrap();
                         file_name = file_name.trim().to_string();
-                        cmd_funcs::rm(&file_name);
+                        println!("File {} removed successfully", cmd_funcs::rm(&file_name).unwrap());
                     }
                     "mkdir" => {
                         let mut directory_name: String = String::new();
@@ -50,7 +50,7 @@ async fn main() -> Result<(), reqwest::Error> {
                         flush!();
                         std::io::stdin().read_line(&mut directory_name).unwrap();
                         directory_name = directory_name.trim().to_string();
-                        cmd_funcs::mkdir(&directory_name);
+                        println!("Directory {} created successfully", cmd_funcs::mkdir(&directory_name).unwrap());
                     }
                     "rmdir" => {
                         let mut directory_name: String = String::new();
@@ -58,7 +58,7 @@ async fn main() -> Result<(), reqwest::Error> {
                         flush!();
                         std::io::stdin().read_line(&mut directory_name).unwrap();
                         directory_name = directory_name.trim().to_string();
-                        cmd_funcs::rmdir(&directory_name);
+                        println!("Directory {} removed successfully", cmd_funcs::rmdir(&directory_name).unwrap());
                     }
                     "ls" => cmd_funcs::ls(),
                     "xor" => {
