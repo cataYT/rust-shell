@@ -1,4 +1,4 @@
-use std::fs::{self, File};
+use std::{fs::{self, File}, path::PathBuf};
 use reqwest;
 
 struct Colors;
@@ -119,8 +119,14 @@ pub fn clear() {
     print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
 }
 
-pub fn pwd() {
-    std::env::current_dir().unwrap().display().to_string();
+pub fn pwd() -> Option<PathBuf> {
+    match std::env::current_dir() {
+        Ok(c_d) => Some(c_d),
+        Err(e) => {
+            eprintln!("Error: {}", e);
+            None
+        }
+    }
 }
 
 pub async fn curl(url: &str) -> Result<String, reqwest::Error> {

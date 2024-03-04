@@ -1,13 +1,20 @@
 use std::io::{self, Write};
 mod cmd_funcs;
 
+fn replace_home_with_tilde(path: &str) -> String {
+    if path.starts_with("/home/cata") {
+        return format!("~{}", &path["/home/cata".len()..]);
+    }
+    path.to_string()
+}
+
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
     println!("Welcome to my shell!!");
 
     loop {
         let mut input_string: String = String::new(); // Clear input_string at the beginning of each iteration
-        print!("Enter your command: ");
+        print!("{}$: ", replace_home_with_tilde(&cmd_funcs::pwd().unwrap().display().to_string()));
         std::io::stdout().flush().expect("failed to flush buffer");
         match io::stdin().read_line(&mut input_string) {
             Ok(_) => {
@@ -61,9 +68,13 @@ async fn main() -> Result<(), reqwest::Error> {
                         std::io::stdin().read_line(&mut key).unwrap();
                         key = key.trim().chars().next().unwrap().to_string();
                         let result: String = cmd_funcs::xor(&x_string, key.chars().next().unwrap());
-                        println!("{}", result);
+                        println!("Your xor encrypted string is: {}", result);
                     }
-                    "pwd" => cmd_funcs::pwd(),
+                    "pwd" => {
+                        let _pwd = cmd_funcs::pwd().unwrap();
+                        let pwd: std::path::Display<'_> = _pwd.display();
+                        println!("{:?}", pwd);
+                    }
                     "clear" => cmd_funcs::clear(),
                     "curl" => {
                         let mut url: String = String::new();
