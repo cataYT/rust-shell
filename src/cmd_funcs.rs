@@ -25,43 +25,31 @@ pub fn help() {
     println!("exit: exit the program");
 }
 
-pub fn touch(file_name: &str) -> Option<&str> {
+pub fn touch(file_name: &str) -> Result<&str, std::io::Error> {
     match File::create(file_name) {
-        Ok(_) => Some(file_name),
-        Err(error) => {
-            eprintln!("Problem creating the file: {:?}", error);
-            None
-        }
+        Ok(_) => Ok(file_name),
+        Err(error) => Err(error)
     }
 }
 
-pub fn rm(file_name: &str) -> Option<&str> {
+pub fn rm(file_name: &str) -> Result<&str, std::io::Error> {
     match std::fs::remove_file(file_name) {
-        Ok(_) => Some(file_name),
-        Err(error) => {
-            eprintln!("Problem removing the file: {:?}", error);
-            None
-        }
+        Ok(_) => Ok(file_name),
+        Err(error) => Err(error)
     }
 }
 
-pub fn mkdir(dir_name: &str) -> Option<&str> {
+pub fn mkdir(dir_name: &str) -> Result<&str, std::io::Error> {
     match std::fs::create_dir(dir_name) {
-        Ok(_) => Some(dir_name),
-        Err(error) => {
-            eprintln!("Problem creating the directory: {:?}", error);
-            None
-        }
+        Ok(_) => Ok(dir_name),
+        Err(error) => Err(error)
     }
 }
 
-pub fn rmdir(dir_name: &str) -> Option<&str> {
+pub fn rmdir(dir_name: &str) -> Result<&str, std::io::Error> {
     match std::fs::remove_dir(dir_name) {
-        Ok(_) => Some(dir_name),
-        Err(error) => {
-            eprintln!("Problem removing the directory: {:?}", error);
-            None
-        }
+        Ok(_) => Ok(dir_name),
+        Err(error) => Err(error)
     }
 }
 

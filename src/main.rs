@@ -34,7 +34,10 @@ async fn main() -> Result<(), reqwest::Error> {
                         flush!();
                         std::io::stdin().read_line(&mut file_name).unwrap();
                         file_name = file_name.trim().to_string();
-                        println!("File {} created successfully", cmd_funcs::touch(&file_name).unwrap());
+                        match cmd_funcs::touch(&file_name) {
+                            Ok(name) => println!("File {} created successfully", name),
+                            Err(error) => println!("Error creating file: {}", error),
+                        }
                     }
                     "rm" => {
                         let mut file_name: String = String::new();
@@ -42,7 +45,10 @@ async fn main() -> Result<(), reqwest::Error> {
                         flush!();
                         std::io::stdin().read_line(&mut file_name).unwrap();
                         file_name = file_name.trim().to_string();
-                        println!("File {} removed successfully", cmd_funcs::rm(&file_name).unwrap());
+                        match cmd_funcs::rm(file_name.as_str()) {
+                            Ok(name) => println!("File {} removed successfully", name),
+                            Err(error) => println!("Error removing file: {}", error),
+                        }
                     }
                     "mkdir" => {
                         let mut directory_name: String = String::new();
@@ -50,7 +56,10 @@ async fn main() -> Result<(), reqwest::Error> {
                         flush!();
                         std::io::stdin().read_line(&mut directory_name).unwrap();
                         directory_name = directory_name.trim().to_string();
-                        println!("Directory {} created successfully", cmd_funcs::mkdir(&directory_name).unwrap());
+                        match cmd_funcs::mkdir(&directory_name) {
+                            Ok(name) => println!("Directory {} created successfully", name),
+                            Err(error) => println!("Error creating directory: {}", error),
+                        }
                     }
                     "rmdir" => {
                         let mut directory_name: String = String::new();
@@ -58,7 +67,10 @@ async fn main() -> Result<(), reqwest::Error> {
                         flush!();
                         std::io::stdin().read_line(&mut directory_name).unwrap();
                         directory_name = directory_name.trim().to_string();
-                        println!("Directory {} removed successfully", cmd_funcs::rmdir(&directory_name).unwrap());
+                        match cmd_funcs::rmdir(&directory_name) {
+                            Ok(name) => println!("Directory {} removed successfully", name),
+                            Err(error) => println!("Error removing directory: {}", error),
+                        }
                     }
                     "ls" => cmd_funcs::ls(),
                     "xor" => {
