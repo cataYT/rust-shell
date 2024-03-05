@@ -36,7 +36,7 @@ async fn main() -> Result<(), reqwest::Error> {
                         file_name = file_name.trim().to_string();
                         match cmd_funcs::touch(&file_name) {
                             Ok(name) => println!("File {} created successfully", name),
-                            Err(error) => println!("Error creating file: {}", error),
+                            Err(error) => eprintln!("Error creating file: {}", error),
                         }
                     }
                     "rm" => {
@@ -47,7 +47,7 @@ async fn main() -> Result<(), reqwest::Error> {
                         file_name = file_name.trim().to_string();
                         match cmd_funcs::rm(file_name.as_str()) {
                             Ok(name) => println!("File {} removed successfully", name),
-                            Err(error) => println!("Error removing file: {}", error),
+                            Err(error) => eprintln!("Error removing file: {}", error),
                         }
                     }
                     "mkdir" => {
@@ -58,7 +58,7 @@ async fn main() -> Result<(), reqwest::Error> {
                         directory_name = directory_name.trim().to_string();
                         match cmd_funcs::mkdir(&directory_name) {
                             Ok(name) => println!("Directory {} created successfully", name),
-                            Err(error) => println!("Error creating directory: {}", error),
+                            Err(error) => eprintln!("Error creating directory: {}", error),
                         }
                     }
                     "rmdir" => {
@@ -69,7 +69,7 @@ async fn main() -> Result<(), reqwest::Error> {
                         directory_name = directory_name.trim().to_string();
                         match cmd_funcs::rmdir(&directory_name) {
                             Ok(name) => println!("Directory {} removed successfully", name),
-                            Err(error) => println!("Error removing directory: {}", error),
+                            Err(error) => eprintln!("Error removing directory: {}", error),
                         }
                     }
                     "ls" => cmd_funcs::ls(),
@@ -118,7 +118,10 @@ async fn main() -> Result<(), reqwest::Error> {
                         print!("Enter operation: ");
                         flush!();
                         std::io::stdin().read_line(&mut operation).unwrap();
-                        println!("Result: {}", cmd_funcs::calc(&operation, &num1, &num2).unwrap());
+                        match cmd_funcs::calc(&operation, &num1, &num2) {
+                            Ok(result) => println!("Result: {}", result),
+                            Err(error) => eprintln!("Error: {}", error),
+                        }
                     }
                     _ => {
                         println!("Unknown command: {}", low_input_str);

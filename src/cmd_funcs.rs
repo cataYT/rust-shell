@@ -134,5 +134,11 @@ pub fn calc(operation: &str, num1: &str, num2: &str) -> Result<f64, String> {
             }
         },
         _ => Err(format!("Invalid operation: {}", operation)),
-    }
+    }.and_then(|result| {
+        if result.is_nan() {
+            Err("Result is NaN".to_string())
+        } else {
+            Ok(result)
+        }
+    })
 }
