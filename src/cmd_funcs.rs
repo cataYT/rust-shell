@@ -22,6 +22,7 @@ pub fn help() {
     println!("pwd: prints current working directory");
     println!("curl: send get request");
     println!("calc: does basic arithmetic");
+    println!("whoami: prints your name");
     println!("exit: exit the program");
 }
 

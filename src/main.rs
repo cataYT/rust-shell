@@ -17,10 +17,17 @@ fn replace_home_with_tilde(path: &str) -> String {
 #[tokio::main]
 async fn main() -> Result<(), reqwest::Error> {
     println!("Welcome to my shell!!");
-
+    print!("Enter your name: ");
+    flush!();
+    let mut name: String = String::new();
+    std::io::stdin().read_line(&mut name).expect("Failed to read name");
+    if name.trim().is_empty() {
+        println!("Assigning default name...");
+        name = "cata".to_string();
+    }
     loop {
         let mut input_string: String = String::new(); // Clear input_string at the beginning of each iteration
-        print!("{}$: ", replace_home_with_tilde(&cmd_funcs::pwd().unwrap().display().to_string()));
+        print!("{}@{}:{}$: ", name.trim(), name.trim(), replace_home_with_tilde(&cmd_funcs::pwd().unwrap().display().to_string()));
         flush!();
         match io::stdin().read_line(&mut input_string) {
             Ok(_) => {
@@ -123,6 +130,7 @@ async fn main() -> Result<(), reqwest::Error> {
                             Err(error) => eprintln!("Error: {}", error),
                         }
                     }
+                    "whoami" => println!("{}", name),
                     _ => {
                         println!("Unknown command: {}", low_input_str);
                     }
